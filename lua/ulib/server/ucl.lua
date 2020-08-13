@@ -222,14 +222,14 @@ local function reloadUsers()
 
 	local needsBackup = false
 
-    local err
-    local userData = ULib.fileRead( path, true ) or ""
+	local err
+	local userData = ULib.fileRead( path, true ) or ""
 
-    ucl.users = ULib.jsonDecode( userData, true )
+	ucl.users = ULib.jsonDecode( userData, true )
 
-    if not ucl.users then
-	    ucl.users, err = ULib.parseKeyValues( ULib.removeCommentHeader( userData, "/" ) )
-    end
+	if not ucl.users then
+		ucl.users, err = ULib.parseKeyValues( ULib.removeCommentHeader( userData, "/" ) )
+	end
 
 	-- Check to make sure it passes a basic validity test
 	if not ucl.users then

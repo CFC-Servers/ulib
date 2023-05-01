@@ -20,9 +20,15 @@ local HOOK_NORMAL = HOOK_NORMAL
 --local HOOK_LOW = HOOK_LOW
 local HOOK_MONITOR_LOW = HOOK_MONITOR_LOW
 
+local oldHooks = hook.GetTable()
+
 module( "hook" )
 
 local events = {}
+
+-- Backwards ULib compatibility
+local ulibHooks = {}
+function GetULibTable() return ulibHooks end
 
 local function find_hook( event, name )
 	for i = 1, event.n, 4 do
@@ -86,7 +92,7 @@ local function copy_event( event, event_name )
 
 			return parent[pos + 1]
 		end
-	})
+	} )
 
 	return new_event
 end
@@ -100,6 +106,13 @@ function Add( event_name, name, func, priority )
 	if not isstring( event_name ) then return end
 	if not isfunction( func ) then return end
 	if not name then return end
+
+
+	-- For backwards hook.GetULibTable() compatibility
+	if ulibHooks[event_name] == nil then
+		ulibHooks[event_name] = { [-2] = {}, [-1] = {}, [0] = {}, [1] = {}, [2] = {} }
+	end
+	ulibHooks[event_name][priority or 0][name] = { fn = func, isstring = isstring( name ) }
 
 	local real_func = func
 	if not isstring( name ) then
@@ -266,4 +279,11 @@ end
 -----------------------------------------------------------]]
 function Run( name, ... )
 	return Call( name, gmod and gmod.GetGamemode() or nil, ... )
+end
+
+-- Add all the old hooks
+for hookName, hookTable in pairs( oldHooks ) do
+	for name, func in pairs( hookTable ) do
+		Add( hookName, name, func )
+	end
 end

@@ -118,7 +118,7 @@ local function tool( ply, tr, toolmode, second )
 		end
 	end
 
-    local trTable = getTable( tr.Entity )
+	local trTable = getTable( tr.Entity )
 	if trTable.NoMoving and not moveWhitelist[toolmode] then
 		return false
 	end
@@ -130,7 +130,7 @@ end
 hook.Add( "CanTool", "ULibEntToolCheck", tool, HOOK_HIGH )
 
 local function property( _, _, ent )
-    local entTable = getTable( ent )
+	local entTable = getTable( ent )
 	if entTable.NoMoving and not moveWhitelist[toolmode] then
 		return false
 	end
@@ -159,7 +159,7 @@ hook.Add( "OnPhysgunReload", "ULibEntPhysReloadCheck", physgunReload, HOOK_HIGH 
 
 -- This is just in case we have some horribly programmed addon that goes rampant in deleting things
 local function removedCheck( ent )
-    local entTable = getTable( ent )
+	local entTable = getTable( ent )
 	if entTable.NoDeleting and not entTable.NoReplication then
 		local class = ent:GetClass()
 		local pos = ent:GetPos()

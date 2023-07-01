@@ -225,15 +225,13 @@ end
 
 		v2.10 - Initial
 ]]
-local allowedCharsStr = "STEAM_:1234567890"
-local allowedCharsIndex = string.Explode( "", allowedCharsStr )
-local allowedChars = {}
-
-for _, char in ipairs( allowedCharsIndex ) do
-	allowedChars[char] = true
-end
-
 function ULib.unban( steamid, admin )
+	local safe = util.SteamIDFrom64( util.SteamIDTo64( steamid ) )
+	if safe == "STEAM_0:0:0" then
+		ULib.tsayError( admin, "Invalid steamid." )
+		return
+	end
+
 	RunConsoleCommand( "removeid", steamid )
 	RunConsoleCommand( "writeid" ) -- Saving
 

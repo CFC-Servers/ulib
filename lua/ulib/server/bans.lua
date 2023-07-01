@@ -1,4 +1,4 @@
---[[
+.--[[
 	Title: Bans
 
 	Ban-related functions and listeners.
@@ -234,21 +234,7 @@ for _, char in ipairs( allowedCharsIndex ) do
 end
 
 function ULib.unban( steamid, admin )
-	for i = 1, #steamid do
-		if not allowedChars[steamid[i]] then
-			ULib.tsayError( admin, "Invalid steamid." )
-			return
-		end
-	end
-
-	local safe = util.SteamIDFrom64( util.SteamIDTo64( steamid ) )
-
-    if safe == "STEAM_0:0:0" then
-		ULib.tsayError( admin, "Invalid steamid." )
-		return
-	end
-
-	game.ConsoleCommand( "removeid " .. safe .. "\n" )
+	RunConsoleCommand( "removeid", steamid )
 	RunConsoleCommand( "writeid" ) -- Saving
 
 	--ULib banlist

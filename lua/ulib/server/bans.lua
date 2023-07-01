@@ -1,4 +1,4 @@
-.--[[
+--[[
 	Title: Bans
 
 	Ban-related functions and listeners.

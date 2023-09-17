@@ -57,20 +57,6 @@ function ULib.registerPlugin( pluginData )
 			end
 		end
 	end
-
-	if SERVER then
-		ULib.clientRPC( nil, "ULib.registerPlugin", pluginData )
-	end
-end
-
-
-if SERVER then
-	local function sendRegisteredPlugins( ply )
-		for name, pluginData in pairs (ULib.plugins) do
-			ULib.clientRPC( ply, "ULib.registerPlugin", pluginData )
-		end
-	end
-	hook.Add( "PlayerInitialSpawn", "ULibSendRegisteredPlugins", sendRegisteredPlugins )
 end
 
 local ulibBuildNumURL = ULib.RELEASE and "https://teamulysses.github.io/ulib/ulib.build" or "https://raw.githubusercontent.com/TeamUlysses/ulib/master/ulib.build"

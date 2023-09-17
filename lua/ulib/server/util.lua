@@ -26,9 +26,15 @@ function ULib.clientRPC( plys, fn, ... )
 	ULib.checkArg( 1, "ULib.clientRPC", {"nil","Player","table"}, plys )
 	ULib.checkArg( 2, "ULib.clientRPC", {"string"}, fn )
 
+	local encoded = ULib.pon.encode( { ... } )
+	local compressed = util.Compress( encoded )
+
 	net.Start( "URPC" )
 	net.WriteString( fn )
-	net.WriteTable( {...} )
+
+	net.WriteUInt( #compressed, 16 )
+	net.WriteData( compressed, #compressed )
+
 	if plys then
 		net.Send( plys )
 	else

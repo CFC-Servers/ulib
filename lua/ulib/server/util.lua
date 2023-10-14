@@ -149,17 +149,20 @@ function ULib.replicatedWritableCvar( sv_cvar, cl_cvar, default_value, save, not
 end
 
 local function repCvarOnJoin( ply )
+	local sendTbl = {}
 	for sv_cvar, v in pairs( repcvars ) do
-		net.Start( "ulib_repWriteCvar" )
-			net.WriteString( sv_cvar )
-			net.WriteString( v.cl_cvar )
-			net.WriteString( v.default )
-			net.WriteString( v.cvar_obj:GetString() )
-		net.Send( ply )
+		sendTbl[sv_cvar] = { v.cl_cvar, v.default, v.cvar_obj:GetString() }
 	end
+
+	local poncoded = ULib.pon.encode( sendTbl )
+	local compressed = util.Compress( poncoded )
+
+	net.Start( "ulib_repWriteCvars" )
+		net.WriteUInt( #compressed, 16 )
+		net.WriteData( compressed, #compressed )
+	net.Send( ply )
 end
 hook.Add( ULib.HOOK_LOCALPLAYERREADY, "ULibSendCvars", repCvarOnJoin )
-
 
 local function clientChangeCvar( ply, command, argv )
 	local sv_cvar = argv[ 1 ]
@@ -198,13 +201,15 @@ repCvarServerChanged = function( sv_cvar, oldvalue, newvalue )
 	if not repcvars[ sv_cvar ] then -- Bad value or we need to ignore it
 		return
 	end
-	
-	net.Start( "ulib_repChangeCvar" ) -- Tell clients to reset to new value
-		net.WriteEntity( repcvars[ sv_cvar ].ignore or Entity( 0 ) )
-		net.WriteString( repcvars[ sv_cvar ].cl_cvar )
-		net.WriteString( oldvalue )
-		net.WriteString( newvalue )
-	net.Broadcast()
+
+	if player.GetCount() ~= 0 then
+		net.Start( "ulib_repChangeCvar" ) -- Tell clients to reset to new value
+			net.WriteEntity( repcvars[ sv_cvar ].ignore or Entity( 0 ) )
+			net.WriteString( repcvars[ sv_cvar ].cl_cvar )
+			net.WriteString( oldvalue )
+			net.WriteString( newvalue )
+		net.Broadcast()
+	end
 
 	if repcvars[ sv_cvar ].ignore then
 		repcvars[ sv_cvar ].ignore = nil

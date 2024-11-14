@@ -200,7 +200,7 @@ function ULib.addBan( steamid, time, reason, name, admin )
 
 	local ply = player.GetBySteamID( steamid )
 	if ply then
-		ULib.kick( ply, longReason, nil, true)
+		ULib.kick(ply, longReason)
 	end
 
 	-- This redundant kick is to ensure they're kicked -- even if they're joining

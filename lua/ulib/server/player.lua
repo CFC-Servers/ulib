@@ -107,6 +107,14 @@ function ULib.kick( ply, reason, calling_ply )
 	else
 		ply:Kick( reason or "[ULX] Kicked from server" )
 	end
+
+	local ipPort = ply:IPAddress()
+	if ipPort ~= "Error!" then
+		-- Stop accepting packets from them on the very next frame (it can take 10+ frames for them to actually disconnect!)
+		local ip = string.Split( ipPort, ":" )[1]
+		RunConsoleCommand( "addip", 1, ip )
+	end
+
 	hook.Call( ULib.HOOK_USER_KICKED, _, steamid, reason or "[ULX] Kicked from server", calling_ply )
 end
 

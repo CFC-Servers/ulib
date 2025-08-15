@@ -101,8 +101,8 @@ end
     Desc: Add a hook to listen to the specified event.
 -----------------------------------------------------------]]
 local function hookAdd( event_name, name, func, priority )
-    if not isstring( event_name ) then return end
-    if not isfunction( func ) then return end
+    if not isstring( event_name ) then ErrorNoHaltWithStack( "bad argument #1 to 'Add' (string expected, got " .. type( event_name ) .. ")" ) return end
+    if not isfunction( func ) then ErrorNoHaltWithStack( "bad argument #3 to 'Add' (function expected, got " .. type( func ) .. ")" ) return end
     if not name then return end
 
 

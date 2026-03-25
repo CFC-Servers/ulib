@@ -7,6 +7,7 @@ local isstring = isstring
 local isnumber = isnumber
 local isfunction = isfunction
 local insert = table.insert
+local type = type
 
 HOOK_MONITOR_HIGH = -2
 HOOK_HIGH = -1

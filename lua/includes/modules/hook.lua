@@ -217,8 +217,10 @@ local function hookRemove( event_name, name )
     end
 
 	local ulibEventHooks = ulibHooks[event_name]
-	for _, hooks in pairs(ulibEventHooks) do
-		hooks[name] = nil
+	if ulibEventHooks then
+		for _, hooks in pairs(ulibEventHooks) do
+			hooks[name] = nil
+		end
 	end
 
     events[event_name] = copy_event( event, event_name )

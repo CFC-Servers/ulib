@@ -113,10 +113,10 @@ end
 local function writeBan( bandata )
 	local result = sql.Query(
 		"REPLACE INTO ulib_bans (steamid, time, unban, reason, name, admin, modified_admin, modified_time) " ..
-		string.format( "VALUES (%s, %i, %i, %s, %s, %s, %s, %s)",
+		string.format( "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
 			util.SteamIDTo64( bandata.steamID ),
-			bandata.time or 0,
-			bandata.unban or 0,
+			tostring( math.floor( bandata.time or 0 ) ),
+			tostring( math.floor( bandata.unban or 0 ) ),
 			escapeOrNull( bandata.reason ),
 			escapeOrNull( bandata.name ),
 			escapeOrNull( bandata.admin ),

@@ -150,7 +150,7 @@ function ucl.saveUser( steamid, userInfo )
 			(steamid, name, usergroup, allow, deny)
 		VALUES
 			('%s', '%s', '%s', '%s', '%s');
-	]], escape( steamid ), escape( userInfo.name or "" ), escape( userInfo.group ), escape( allow ), escape( deny )))
+	]], escape( steamid ), escape( userInfo.name or "" ), escape( userInfo.group or "" ), escape( allow ), escape( deny )))
 end
 
 function ucl.deleteUser( steamid )
@@ -341,7 +341,7 @@ local function reloadUsers()
 					needsBackup = true
 					userInfo.name = nil
 				end
-				if userInfo.group == "" then userInfo.group = nil end -- Clean :)
+				if userInfo.group == "" or userInfo.group == "nil" then userInfo.group = nil end -- Clean :)
 				-- Lower case'ify
 				for k, v in pairs( userInfo.allow ) do
 					if type( k ) == "string" and k:lower() ~= k then
